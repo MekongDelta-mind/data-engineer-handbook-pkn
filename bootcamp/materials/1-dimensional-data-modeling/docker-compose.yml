@@ -4,14 +4,14 @@ services:
     restart: on-failure
     container_name: ${DOCKER_CONTAINER}
     env_file:
-      - .env
-      - example.env
+      - .env # docker copmose read the env here. location for env
+      # - example.env
     environment:
       - POSTGRES_DB=${POSTGRES_SCHEMA}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - "${CONTAINER_PORT}:5432"
+      - "${HOST_PORT}:${CONTAINER_PORT}" # changed hte ports sequence : <host_port>:<container_port> from .env
     volumes:
       - ./:/bootcamp/
       - ./data.dump:/docker-entrypoint-initdb.d/data.dump

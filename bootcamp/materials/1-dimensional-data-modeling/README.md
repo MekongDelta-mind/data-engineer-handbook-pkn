@@ -155,3 +155,32 @@ There are two methods to get Postgres running locally.
 - To see logs from the Postgres container, run **`make logs`**.
 - To inspect the Postgres container, run **`make inspect`**.
 - To find the port Postgres is running on, run **`make ip`**.
+
+# Additional Personal note while dealing with the 1st week
+
+## Course logistic
+
+FYI There is a another fork of the repo which belong to the org : `[DataExpert-io-Free](https://github.com/DataExpert-io-Free/data-engineer-handbook)`
+
+
+
+## Setting up the posgres on Local
+
+Problem face:
+1. Running the command `psql -U <computer-username> postgres < data.dump` is creating the database and creating respective tables which can be queried with the below query.
+    ```SQL
+    SELECT * FROM pg_catalog.pg_tables;
+    ```
+    Results:
+        We can see the tables in the list as required.
+
+Solution:
+    1. extract the `data.dump` and check into the data folder. There is a restore.sql file which takes the path from the ENVIRONMENT you running the script. The script has the below note.
+    ```SQL
+    -- NOTE:
+    --
+    -- File paths need to be edited. Search for $$PATH$$ and
+    -- replace it with the path to the directory containing
+    -- the extracted data files.
+    ```
+    2. 
