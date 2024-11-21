@@ -1,2 +1,5 @@
 .idea/
 .DS_Store
+
+# ignoring persistent volumes folder
+bootcamp/materials/1-dimensional-data-modeling/postgres-data/
