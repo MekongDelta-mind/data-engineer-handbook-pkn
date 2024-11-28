@@ -7,19 +7,11 @@ up:
 		cp example.env .env; \
         exit 1; \
 	fi
-<<<<<<< HEAD
 	# docker-compose up -d; # this command is for leagacy docker compose
-	docker compose up -d
-
-.PHONY: down
-down:
-	# docker-compose down -v
-=======
 	docker compose up -d;
 
 .PHONY: down
 down:
->>>>>>> 7c71647a59c8e226894b23966b230451ec2892b2
 	docker compose down -v
 	@if [[ "$(docker ps -q -f name=${DOCKER_CONTAINER})" ]]; then \
 		echo "Terminating running container..."; \
@@ -28,15 +20,8 @@ down:
 
 .PHONY: restart
 restart:
-<<<<<<< HEAD
-	# docker-compose down -v; \
 	docker compose down -v; \
 	sleep 5; \
-	# docker-compose up -d;
-=======
-	docker compose down -v; \
-	sleep 5; \
->>>>>>> 7c71647a59c8e226894b23966b230451ec2892b2
 	docker compose up -d;
 
 .PHONY: logs

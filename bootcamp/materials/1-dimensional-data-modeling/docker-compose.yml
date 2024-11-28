@@ -4,12 +4,8 @@ services:
     restart: on-failure
     container_name: ${DOCKER_CONTAINER}
     env_file:
-<<<<<<< HEAD
       - .env # docker copmose read the env here. location for env
       # - example.env
-=======
-      - .env
->>>>>>> 7c71647a59c8e226894b23966b230451ec2892b2
     environment:
       - POSTGRES_DB=${POSTGRES_SCHEMA}
       - POSTGRES_USER=${POSTGRES_USER}
