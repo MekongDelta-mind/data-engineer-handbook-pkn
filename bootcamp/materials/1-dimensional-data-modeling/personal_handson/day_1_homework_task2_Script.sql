@@ -637,7 +637,7 @@ SELECT
 FROM
 	actors
 WHERE
-	current_year = 1969  
+	current_year = 2020  
 ), 
 	toyear AS (
 SELECT
@@ -659,7 +659,7 @@ SELECT
 	        end
 	end::quality_class as quality_class
    FROM actor_films
-   WHERE year = 1970
+   WHERE year = 2021
    GROUP BY actorid, actor,YEAR		-- the YEAR OF the film IN yesteryear AND toyear IS different
 	)
 --INSERT INTO actors --- it IS mentioned IN lexture-lab folder OF the course
@@ -686,15 +686,22 @@ yesteryear y ON
 	t.actorid = y.actorid;
 
 SELECT * FROM actors a ;
+SELECT * FROM actors a WHERE current_year =1972;
+
+SELECT count(*) FROM actors a WHERE current_year =2021;
+
+DELETE FROM actors WHERE current_year = 2021;
 
 
 
+-------- build the query to insert the whole dataset using the series query 
+-------- OR
+-------- Another way of do this is by using the above query and inserting 
+-------- using the Python Language using the connector, prepared statements and iterating over the years
 
 
 
-
-
------------------------------------------------- single queries to test conditions and methods indiependently
+------------------------------------------------ SINGLE QUERIES TO TEST CONDITIONS AND METHODS INDIEPENDENTLY
 SELECT 100/2 ;
 SELECT
 	af.rating

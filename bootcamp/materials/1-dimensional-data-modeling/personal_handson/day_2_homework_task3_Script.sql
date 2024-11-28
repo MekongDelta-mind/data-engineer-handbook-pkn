@@ -38,17 +38,15 @@ PRIMARY KEY (actorid,current_year)
 DROP TABLE IF EXISTS actors_history_scd;
 CREATE TABLE actors_history_scd(
 	actor TEXT,
-	actorid TEXT,
-	film_stats film_stats[],
 	quality_class quality_class, -- creating an enum star, good average
 	is_active boolean,
 	start_date integer,
 	end_date integer,
-	current_year integer
---	PRIMARY KEY (actorid,current_year) 	
+	current_year integer,
+	PRIMARY KEY (actor,current_year,start_date) 	-- START date would be different FOR EACH ROW but END date wouldnt be.
 );
--- Primary key removed as the table from which the values are going to be 
--- retrieved is populated with uniques values from the keys
+-- Primary key should be present to have different values
+
 
 SELECT * FROM actors_history_scd;
 
