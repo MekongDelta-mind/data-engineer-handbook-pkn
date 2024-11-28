@@ -24,6 +24,7 @@
 
 The primary key for this dataset is (actor_id, film_id).
  */
+
 SELECT
 	*
 FROM
@@ -56,7 +57,12 @@ Additional notes while solving the problem
 	* TRUNCATE, COMMENT, RENAME [used very rarely]  
 * for `is_active` first extract the current_year and then try to check if the actor is present or not
 
+ *
+ * creating the table  before creating the film types give hte error as
+ * SQL Error [42704]: ERROR: type "films[]" does not exist
+  Position: 30 
  */
+ 
 DROP TYPE IF EXISTS film_stats CASCADE ;
 CREATE TYPE film_stats AS (
 	film TEXT,
@@ -85,12 +91,8 @@ CREATE TABLE actors (
 PRIMARY KEY (actorid,current_year)	
 );
 
-/*
- * creating the table  before creating the film types give hte error as
- * SQL Error [42704]: ERROR: type "films[]" does not exist
-  Position: 30 
- */
 
+--------------------------------- Checking the tables if created are correct enough
 SELECT
 	*
 FROM
@@ -107,8 +109,8 @@ FROM
 WHERE
 	table_name = 'actors';
 -- additional info about the information_schema AT the END 
------------------------------------------------------------------------------------------------- Task1 completed
 
+------------------------------------------------------------------------------------------------ Task1 completed
 
 
 
@@ -241,5 +243,3 @@ Imagine a library:
 
 By understanding these concepts, you can effectively organize and manage your data in PostgreSQL.
 
-
- */
