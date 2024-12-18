@@ -11,6 +11,3 @@ SELECT *
 FROM deduped
 WHERE row_num=1;
 
-
--- A DDL for an user_devices_cumulated table that has:
-
