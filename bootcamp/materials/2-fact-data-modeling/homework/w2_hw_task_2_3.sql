@@ -44,8 +44,7 @@ today AS (
 				d.device_id = e.device_id
 		WHERE 
 			DATE(CAST(e.event_time AS TIMESTAMP)) = DATE('2023-01-01')
-			AND user_id IS NOT NULL 
-			AND d.browser_type IS NOT NULL 
+			AND user_id IS NOT NULL AND browser_type IS NOT NULL 
 			GROUP BY 1,2,3
 )
 SELECT 
@@ -53,12 +52,71 @@ SELECT
 	CASE WHEN y.present_date IS NULL 
 			THEN ARRAY[t.curr_date]
 		WHEN t.curr_date IS NULL THEN y.device_activity_datelist  -- WHEN a today's DAY IS inactive THEN we SKIP it AND keep ALL the previous datelist
-		ELSE ARRAY[t.curr_date] || y.present_date 
+		ELSE ARRAY[t.curr_date] || y.device_activity_datelist
 		END
 	AS device_activity_datelist,
 	COALESCE(t.curr_date, y.present_date + INTERVAL '1 day') AS present_date, -- present_date IS the date IN the user_devices_cumulated TABLE
-	t.browser_type AS browser_type
+	COALESCE(t.browser_type, y.browser_type) AS browser_type
 FROM 
 today t
 FULL OUTER JOIN yesterday y 
-ON t.user_id = y.user_id;
+ON t.user_id = y.user_id AND t.browser_type = y.browser_type;
+
+
+-- Filling up all the values using loop , begin declare from postgres
+
+DO $$
+DECLARE
+    start_date DATE := '2023-01-02';
+    end_date DATE := '2023-01-30';
+BEGIN
+    -- Loop through the date range
+    WHILE start_date <= end_date LOOP
+        -- Construct the dynamic SQL query
+        EXECUTE format(
+            'WITH 
+            yesterday AS (
+                SELECT 
+                *
+                FROM 
+                user_devices_cumulated udc 
+                WHERE present_date = %L
+            ),
+            today AS ( 
+                    SELECT
+                    CAST(e.user_id AS TEXT) AS user_id,
+                    d.browser_type,
+                    DATE(CAST(e.event_time AS TIMESTAMP)) AS curr_date
+                    FROM
+                            events e
+                        LEFT JOIN 
+                        devices d 
+                        ON
+                            d.device_id = e.device_id
+                    WHERE 
+                        DATE(CAST(e.event_time AS TIMESTAMP)) = %L
+                        AND user_id IS NOT NULL AND browser_type IS NOT NULL 
+                        GROUP BY 1,2,3
+            )
+            INSERT INTO user_devices_cumulated
+            SELECT 
+                COALESCE(t.user_id,y.user_id) AS user_id,
+                CASE WHEN y.present_date IS NULL 
+                        THEN ARRAY[t.curr_date]
+                    WHEN t.curr_date IS NULL THEN y.device_activity_datelist  
+                    ELSE ARRAY[t.curr_date] || y.device_activity_datelist
+                    END
+                AS device_activity_datelist,
+                COALESCE(t.curr_date, y.present_date + INTERVAL ''1 day'') AS present_date, 
+                COALESCE(t.browser_type, y.browser_type) AS browser_type
+            FROM 
+            today t
+            FULL OUTER JOIN yesterday y 
+            ON t.user_id = y.user_id AND t.browser_type = y.browser_type;',
+            start_date,
+            start_date + INTERVAL '1 day'
+        );
+        -- Increment the start_date for the next iteration
+        start_date := start_date + INTERVAL '1 day';
+    END LOOP;
+END $$;
